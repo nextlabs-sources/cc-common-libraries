@@ -1,0 +1,14 @@
+plugins {
+    id 'application'
+}
+
+dependencies {
+    implementation "com.fasterxml.jackson.core:jackson-databind:${versions.jacksonDatabind}"
+    implementation "com.google.guava:guava:${versions.guava}"
+    implementation "com.opencsv:opencsv:${versions.opencsv}"
+    implementation "commons-beanutils:commons-beanutils:${versions.commonsBeanutils}"
+    implementation "org.apache.commons:commons-text:${versions.commonsText}"
+    testImplementation "junit:junit:${versions.junit}"
+}
+
+mainClassName = 'com.nextlabs.cc.tools.configscriptcreator.ConfigScriptCreator'

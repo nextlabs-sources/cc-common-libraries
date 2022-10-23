@@ -1,0 +1,50 @@
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'org.sonarqube'
+apply plugin: 'org.owasp.dependencycheck'
+
+artifactory {
+    contextUrl = artifactoryContextUrl
+    publish {
+        repository {
+            repoKey = version.endsWith('SNAPSHOT') ? 'libs-snapshot-local' : 'libs-release-local'
+            username = artifactoryUser
+            password = artifactoryPassword
+            maven = true
+        }
+        defaults {
+            publications('configClient')
+        }
+    }
+}
+
+publishing {
+    publications {
+        configClient(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+dependencies {
+    compileOnly "javax.servlet:javax.servlet-api:${versions.javaxServletApi}"
+    implementation "com.nextlabs.cc.base:crypt:${versions.crypt}"
+    implementation "com.nextlabs.common:log-manager:${version}"
+    implementation "commons-beanutils:commons-beanutils:${versions.commonsBeanutils}"
+    implementation "org.apache.activemq:activemq-client:${versions.activemq}"
+    implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:${versions.log4j}"
+    testImplementation "org.slf4j:slf4j-jdk14:${versions.slf4j}"
+    testImplementation "junit:junit:${versions.junit}"
+}
+
+dependencyCheck {
+    format = 'ALL'
+}
+
+sonarqube {
+    properties {
+        property 'sonar.dependencyCheck.reportPath', 'build/reports/dependency-check-report.xml'
+        property 'sonar.dependencyCheck.htmlReportPath', 'build/reports/dependency-check-report.html'
+        properties['sonar.sources'] += 'build.gradle'
+    }
+}

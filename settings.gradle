@@ -1,0 +1,6 @@
+rootProject.name = 'cc-common-libraries'
+
+include 'cc-common'
+include 'config-client'
+include 'log-manager'
+include 'config-script-creator'

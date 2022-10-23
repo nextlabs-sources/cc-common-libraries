@@ -1,0 +1,3 @@
+def versions = [:]
+
+ext.versions = ext.versions + versions

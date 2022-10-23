@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="TRACE">
+    <Properties>
+        <Property name="logging.pattern">%d %-5p [%4.15t] %c{1.}: %m%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${logging.pattern}"/>
+        </Console>
+        <RollingFile name="CCLogFile" fileName="${sys:cc.home}/server/logs/def.log"
+                     filePattern="abc-%i.log">
+            <PatternLayout>
+                <Pattern>${logging.pattern}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="WARN">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="CCLogFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

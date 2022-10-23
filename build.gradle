@@ -1,0 +1,38 @@
+allprojects {
+    buildscript {
+        repositories {
+            maven {
+                url "${artifactoryContextUrl}/libs-release"
+                credentials {
+                    username = artifactoryUser
+                    password = artifactoryPassword
+                }
+            }
+        }
+        dependencies {
+            classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.10.0'
+            classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.8'
+            classpath 'org.owasp:dependency-check-gradle:5.2.4'
+        }
+    }
+    repositories {
+        maven {
+            url artifactoryContextUrl + (version.endsWith('SNAPSHOT') ? '/libs-snapshot' : '/libs-release')
+            credentials {
+                username = artifactoryUser
+                password = artifactoryPassword
+            }
+            metadataSources {
+                mavenPom()
+                artifact()
+            }
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+    apply from: '../versions.gradle'
+    apply from: 'versions.gradle'
+}

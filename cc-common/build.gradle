@@ -1,0 +1,45 @@
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'org.sonarqube'
+apply plugin: 'org.owasp.dependencycheck'
+
+artifactory {
+    contextUrl = artifactoryContextUrl
+    publish {
+        repository {
+            repoKey = version.endsWith('SNAPSHOT') ? 'libs-snapshot-local' : 'libs-release-local'
+            username = artifactoryUser
+            password = artifactoryPassword
+            maven = true
+        }
+        defaults {
+            publications('ccCommon')
+        }
+    }
+}
+
+publishing {
+    publications {
+        ccCommon(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+dependencies {
+    implementation "com.nextlabs.cc.base:crypt:${versions.crypt}"
+    implementation "org.apache.commons:commons-exec:${versions.commonsExec}"
+    implementation "org.apache.commons:commons-lang3:${versions.commonsLang3}"
+    testImplementation "junit:junit:${versions.junit}"
+}
+
+dependencyCheck {
+    format = 'ALL'
+}
+
+sonarqube {
+    properties {
+        property 'sonar.dependencyCheck.reportPath', 'build/reports/dependency-check-report.xml'
+        property 'sonar.dependencyCheck.htmlReportPath', 'build/reports/dependency-check-report.html'
+        properties['sonar.sources'] += 'build.gradle'
+    }
+}
